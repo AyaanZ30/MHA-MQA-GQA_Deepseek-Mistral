@@ -23,7 +23,7 @@ class AttentionCommon{
 
         static std::vector<std::vector<float>> textToEmbedding(const std::string &text, const int embedding_dim);
 
-        static std::vector<std::vector<float>> embeddingToText(const std::vector<std::vector<float>> &embedding);
+        static std::string embeddingToText(const std::vector<std::vector<float>> &embedding);
 
         // to calculate memory
         static size_t calculateMemoryKB(const std::vector<std::vector<float>>& matrix);
