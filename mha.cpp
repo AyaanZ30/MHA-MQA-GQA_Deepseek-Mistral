@@ -29,7 +29,7 @@ void MultiHeadAttention::initializeWeights(){
 
     W_q.resize(num_heads, vector<vector<float>>(d_model, vector<float>(d_k)));
     W_k.resize(num_heads, vector<vector<float>>(d_model, vector<float>(d_k)));
-    W_v.resize(num_heads, vector<vector<float>>(d_model, vector<float>(d_k)));
+    W_v.resize(num_heads, vector<vector<float>>(d_model, vector<float>(d_v)));
 
     for(int h = 0 ; h < num_heads ; ++h){
         for(int i = 0 ; i < d_model ; ++i){

@@ -2,7 +2,6 @@
 # define MHA_HPP 
 
 # include "attention_common.hpp"
-
 # include <vector>
 
 class MultiHeadAttention{
