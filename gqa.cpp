@@ -7,15 +7,23 @@
 using namespace std;
 
 GroupedQueryAttention::GroupedQueryAttention(int num_heads, int num_kv_heads, int d_model) : num_heads(num_heads), num_kv_heads(num_kv_heads), d_model(d_model)
-{
+{    
     // G => Group size = (num_heads / num of kv heads) heads per group
     if((num_heads % num_kv_heads) != 0){
+        std::cerr << "ERROR: num_heads (" << num_heads << ") must be divisible by num_kv_heads (" << num_kv_heads << ")" << std::endl;
         throw invalid_argument("num_heads must be divisible by num_kv_heads");
     }
 
     heads_per_group = (num_heads / num_kv_heads);
     d_k = (d_model / num_heads);
     d_v = (d_model / num_heads);
+
+    if (d_k == 0 || d_v == 0) {
+        std::cerr << "ERROR: d_k or d_v is zero. d_model=" << d_model << ", num_heads=" << num_heads << std::endl;
+        throw std::invalid_argument("Head dimension cannot be zero");
+    }
+    
+    std::cout << "DEBUG: heads_per_group = " << heads_per_group << ", d_k=" << d_k << ", d_v=" << d_v << std::endl;
     initializeWeights();
 }
 

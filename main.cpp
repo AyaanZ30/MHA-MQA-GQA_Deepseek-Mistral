@@ -29,20 +29,25 @@ int main(){
     MultiHeadAttention mha(NUM_HEADS, D_MODEL);
     mha.printMemoryUsage(textEmbedding);
     auto mha_output = mha.forward(textEmbedding);
-    cout << "MHA Output shape: " << mha_output.size() << " x " << mha_output[0].size() << "\n";
+    cout << "MHA Output shape: " << mha_output.size() << " x " << mha_output[0].size() << "\n\n\n";
 
     cout << "MULTI-QUERY ATTENTION (MHA)\n";
     MultiQueryAttention mqa(NUM_HEADS, D_MODEL);
     mqa.printMemoryUsage(textEmbedding);
     auto mqa_output = mqa.forward(textEmbedding);
-    cout << "MQA Output shape: " << mqa_output.size() << " x " << mqa_output[0].size() << "\n";
+    cout << "MQA Output shape: " << mqa_output.size() << " x " << mqa_output[0].size() << "\n\n\n";
 
     cout << "GROUPED-QUERY ATTENTION (MHA)\n";
-    GroupedQueryAttention gqa(NUM_HEADS, NUM_KV_HEADS, D_MODEL);
-    gqa.printMemoryUsage(textEmbedding);
-    auto gqa_output = gqa.forward(textEmbedding);
-    cout << "GQA Output shape: " << gqa_output.size() << " x " << gqa_output[0].size() << "\n";
-
+    vector<vector<float>> gqa_output; 
+    try{
+        GroupedQueryAttention gqa(NUM_HEADS, NUM_KV_HEADS, D_MODEL);
+        gqa.printMemoryUsage(textEmbedding);
+        gqa_output = gqa.forward(textEmbedding);
+        cout << "GQA Output shape: " << gqa_output.size() << " x " << gqa_output[0].size() << "\n\n\n";
+    }catch(const exception &e){
+        cout << "ERROR creating GQA: " << e.what() << "\n";
+    }
+    
 
     // Demonstrate text reconstruction (simplified)
     cout << "\n=== Text Reconstruction Demo ===\n";

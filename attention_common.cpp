@@ -1,5 +1,5 @@
 
-# include "attention_common.hpp";
+# include "attention_common.hpp"
 
 # include <vector>
 # include <cmath>
@@ -52,9 +52,16 @@ vector<vector<float>> AttentionCommon::matmul(const vector<vector<float>> &A, co
 
 std::vector<std::vector<float>> AttentionCommon::softmax(const std::vector<std::vector<float>>& M){
     vector<vector<float>> result = M;
+    int rows = M.size();
+    int cols = M[0].size();
 
-    for(int i = 0 ; i < M.size() ; ++i){
-        float max_val = *std::max_element(result.begin(), result.end());
+    for(int i = 0 ; i < rows ; ++i){
+        float max_val = -1e9;
+        for(int j = 0; j < cols; ++j){
+            if(result[i][j] > max_val){
+                max_val = result[i][j];
+            }
+        }
 
         float sum = 0.0f;
         for(int j = 0 ; j < M[i].size() ; ++j){
@@ -86,13 +93,13 @@ void AttentionCommon::printMatrix(const vector<vector<float>>& M, const string &
     }cout << endl;
 }
 
-vector<vector<float>> AttentionCommon::textToEmbedding(const string &text, int embedding_dim){
+vector<vector<float>> AttentionCommon::textToEmbedding(const string &text, const int embedding_dim){
     vector<vector<float>> embeddings;
     map<char, int> char_2_idx;
     int idx = 0;
 
     // developing vocabulary
-    for(char &c : text){
+    for(char c : text){
         if(char_2_idx.find(c) == char_2_idx.end()){    
             char_2_idx[c] = idx++;
         }
@@ -102,19 +109,19 @@ vector<vector<float>> AttentionCommon::textToEmbedding(const string &text, int e
     mt19937 gen(rd());
     uniform_real_distribution<float> dist(-0.1f, 0.1f);
 
-    for(char &c : text){
+    for(char c : text){
         vector<float> char_embedding(embedding_dim);     
         int char_idx = char_2_idx[c];
 
         for(int i = 0 ; i < embedding_dim ; ++i){
-            char_embedding[i] = sin((char_idx + 1) * (i + 1) * 0.1f) * dist(gen) * 0.1f;
+            char_embedding[i] = sin((char_idx + 1) * (i + 1) * 0.1f) + dist(gen) * 0.1f;
         }
         embeddings.push_back(char_embedding);
     }
     return embeddings;
 }
 
-string AttentionCommon::embeddingToText(vector<vector<float>> &embedding){
+std::string AttentionCommon::embeddingToText(const std::vector<std::vector<float>> &embedding){
     string result;
     vector<char> alphabets = {' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
@@ -126,7 +133,7 @@ string AttentionCommon::embeddingToText(vector<vector<float>> &embedding){
     return result;
 }
 
-size_t AttentionCommon::calculateMemoryKB(vector<vector<float>>& M){
+size_t AttentionCommon::calculateMemoryKB(const std::vector<std::vector<float>>& M){
     if(M.empty()) { return 0; }
     size_t total_elements = (M.size() * M[0].size());
     return ((total_elements * sizeof(float)) / 1024);

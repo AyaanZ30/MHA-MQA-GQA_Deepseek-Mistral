@@ -74,7 +74,7 @@ vector<vector<float>> MultiQueryAttention::forward(const vector<vector<float>> &
     // concatenating heads
     for(int h = 0 ; h < num_heads ; ++h){
         for(int i = 0 ; i < seq_len ; ++i){
-            for(int j = 0 ; j < d_model ; ++j){
+            for(int j = 0 ; j < d_v ; ++j){
                 output[i][h * d_v + j] = head_outputs[h][i][j];
             }
         }

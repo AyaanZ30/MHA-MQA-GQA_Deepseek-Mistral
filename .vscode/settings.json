@@ -1,5 +1,12 @@
 {
     "files.associations": {
+        "*.ejs": "html",
+        "*.js": "javascript",
+        "*.json": "json",
+        "*.jsx": "javascriptreact",
+        "*.ts": "typescript",
+        "*.tsx": "typescriptreact",
+        "*.css": "css",
         "algorithm": "cpp",
         "atomic": "cpp",
         "bit": "cpp",
@@ -52,7 +59,20 @@
         "xmemory": "cpp",
         "xstring": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "array": "cpp",
+        "cwctype": "cpp",
+        "deque": "cpp",
+        "map": "cpp",
+        "unordered_map": "cpp",
+        "functional": "cpp",
+        "memory_resource": "cpp",
+        "random": "cpp",
+        "string_view": "cpp",
+        "numbers": "cpp",
+        "span": "cpp",
+        "text_encoding": "cpp",
+        "variant": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

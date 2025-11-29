@@ -37,10 +37,11 @@ void MultiHeadAttention::initializeWeights(){
                 W_q[h][i][j] = dist(gen);
                 W_k[h][i][j] = dist(gen);
             }
+            for(int z = 0 ; z < d_v ; ++z){
+                W_v[h][i][z] = dist(gen);
+            }
         }
-        for(int z = 0 ; z < d_v ; ++z){
-            W_v[h][i][v] = dist(gen);
-        }
+        
     }
 
     /* initialize output weights ([concat(heads), d_model])
@@ -61,7 +62,7 @@ vector<vector<float>> MultiHeadAttention::forward(const vector<vector<float>> &X
     int seq_len = X.size();
 
     vector<vector<float>> output(seq_len, vector<float>(d_model, 0.0f));
-    vector<vector<float>> head_outputs(num_heads);
+    vector<vector<vector<float>>> head_outputs(num_heads);
 
     for(int h = 0 ; h < num_heads ; ++h){
         auto Q = AttentionCommon::matmul(X, W_q[h]);
@@ -81,14 +82,15 @@ vector<vector<float>> MultiHeadAttention::forward(const vector<vector<float>> &X
         auto attention_weights = AttentionCommon::softmax(scores);
 
         // apply attention to values with the attention context vector from above step
-        head_outputs[h] = AttentionCommon::matmul(attention_weights, V);
+        auto head_result = AttentionCommon::matmul(attention_weights, V);
+        head_outputs[h] = head_result;
     }
 
     // concatenate outputs of each head to get final context vector
     for(int h = 0 ; h < num_heads ; ++h){
         for(int i = 0 ; i < seq_len ; ++i){
             for(int j = 0 ; j < d_v ; ++j){
-                output[i][(h * d_v) + j] = head_outputs[h][i][j];
+                output[i][h * d_v + j] = head_outputs[h][i][j];
             }
         }
     } 
